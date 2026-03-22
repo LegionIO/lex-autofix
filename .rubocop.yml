@@ -1,0 +1,14 @@
+inherit_from:
+  - https://raw.githubusercontent.com/LegionIO/LegionIO/main/.rubocop.yml
+
+AllCops:
+  TargetRubyVersion: 3.4
+  NewCops: enable
+
+Naming/PredicateMethod:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'lex-autofix.gemspec'
