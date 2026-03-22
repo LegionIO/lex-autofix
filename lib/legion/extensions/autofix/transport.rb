@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+module Legion
+  module Extensions
+    module Autofix
+      module Transport
+        extend Legion::Extensions::Transport if defined?(Legion::Extensions::Transport)
+
+        def self.additional_e_to_q
+          [{ from: 'legion.logging', to: 'autofix.ingest', routing_key: 'legion.#' }]
+        end
+      end
+    end
+  end
+end
