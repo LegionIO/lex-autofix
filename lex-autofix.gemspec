@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.files         = Dir['lib/**/*', 'README.md', 'CHANGELOG.md']
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'legion-llm', '>= 0.3'
+  spec.add_dependency 'legion-llm', '>= 0.3.19'
   spec.add_dependency 'lex-github', '>= 0.2'
 
   spec.metadata['rubygems_mfa_required'] = 'true'

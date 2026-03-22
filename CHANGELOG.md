@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.2] - 2026-03-22
+
+### Changed
+- Updated `legion-llm` dependency constraint from `>= 0.3` to `>= 0.3.19`
+
 ## [0.1.1] - 2026-03-21
 
 ### Added
