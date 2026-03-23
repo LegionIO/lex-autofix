@@ -4,7 +4,7 @@
 - **Parent**: `/Users/miverso2/rubymine/legion/extensions-agentic/CLAUDE.md`
 - **Grandparent**: `/Users/miverso2/rubymine/legion/CLAUDE.md`
 
-**Version**: 0.1.0
+**Version**: 0.1.3
 
 ## What This Does
 
@@ -35,7 +35,14 @@ Pipeline: batch_triage --> check_github --> attempt_fix --> ship
 
 ## Dependencies
 
-- `legion-llm` (>= 0.3) — LLM calls for triage and fix generation
+- `legion-cache` (>= 1.3.11) — sub-gem helper
+- `legion-crypt` (>= 1.4.9) — sub-gem helper
+- `legion-data` (>= 1.4.17) — sub-gem helper
+- `legion-json` (>= 1.2.1) — sub-gem helper
+- `legion-llm` (>= 0.3.19) — LLM calls for triage and fix generation
+- `legion-logging` (>= 1.3.2) — sub-gem helper
+- `legion-settings` (>= 1.3.14) — sub-gem helper
+- `legion-transport` (>= 1.3.9) — sub-gem helper
 - `lex-github` (>= 0.2) — GitHub issue and PR management
 
 ## Settings

@@ -3,22 +3,37 @@
 require 'simplecov'
 SimpleCov.start
 
-# Stub framework dependencies for standalone spec loading
-unless defined?(Legion::Extensions::Core)
-  module Legion
-    module Extensions
-      module Core; end
+require 'bundler/setup'
+require 'legion/logging'
+require 'legion/settings'
+require 'legion/cache/helper'
+require 'legion/crypt/helper'
+require 'legion/data/helper'
+require 'legion/json/helper'
+require 'legion/transport/helper'
 
-      module Helpers
-        module Lex; end
+module Legion
+  module Extensions
+    module Helpers
+      module Lex
+        include Legion::Logging::Helper
+        include Legion::Settings::Helper
+        include Legion::Cache::Helper
+        include Legion::Crypt::Helper
+        include Legion::Data::Helper
+        include Legion::JSON::Helper
+        include Legion::Transport::Helper
       end
     end
 
-    module Logging
-      def self.info(*); end
-      def self.warn(*); end
-      def self.error(*); end
-      def self.debug(*); end
+    module Actors
+      class Every
+        include Helpers::Lex
+      end
+
+      class Once
+        include Helpers::Lex
+      end
     end
   end
 end

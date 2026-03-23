@@ -11,6 +11,7 @@ module Legion
     module Autofix
       module Runners
         module Pipeline
+          include Legion::Extensions::Helpers::Lex if defined?(Legion::Extensions::Helpers::Lex)
           include Triage
           include Diagnose
           include Fix
@@ -125,11 +126,11 @@ module Legion
           end
 
           def log_info(msg)
-            Legion::Logging.info(msg) if defined?(Legion::Logging)
+            log.info(msg)
           end
 
           def log_warn(msg)
-            Legion::Logging.warn(msg) if defined?(Legion::Logging)
+            log.warn(msg)
           end
         end
       end

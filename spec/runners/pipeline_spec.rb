@@ -221,6 +221,10 @@ RSpec.describe Legion::Extensions::Autofix::Runners::Pipeline do
         def self.dig(*_keys)
           nil
         end
+
+        def self.[](*)
+          nil
+        end
       end)
     end
 
