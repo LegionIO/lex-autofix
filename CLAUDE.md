@@ -4,7 +4,7 @@
 - **Parent**: `/Users/miverso2/rubymine/legion/extensions-agentic/CLAUDE.md`
 - **Grandparent**: `/Users/miverso2/rubymine/legion/CLAUDE.md`
 
-**Version**: 0.1.3
+**Version**: 0.1.4
 
 ## What This Does
 

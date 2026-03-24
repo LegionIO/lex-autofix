@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.4] - 2026-03-24
 
 ### Changed
 - Add `caller:` identity parameter to `Legion::LLM.structured` call in `runners/triage.rb` (extension: lex-autofix, operation: triage)
