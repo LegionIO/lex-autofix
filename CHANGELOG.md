@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+- Add `caller:` identity parameter to `Legion::LLM.structured` call in `runners/triage.rb` (extension: lex-autofix, operation: triage)
+- Add `caller:` identity and `intent: { capability: :reasoning }` parameters to `Legion::LLM.structured` call in `runners/fix.rb` (extension: lex-autofix, operation: fix)
+
 ## [0.1.3] - 2026-03-22
 
 ### Changed

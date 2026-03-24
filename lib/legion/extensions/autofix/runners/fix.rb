@@ -26,7 +26,9 @@ module Legion
               messages = build_messages(attempt: attempt, error_details: error_details,
                                         files: files, test_output: test_output)
 
-              llm_result = Legion::LLM.structured(messages: messages, schema: schema)
+              llm_result = Legion::LLM.structured(messages: messages, schema: schema,
+                                                  caller: { extension: 'lex-autofix', operation: 'fix' },
+                                                  intent: { capability: :reasoning })
               edits = llm_result[:edits] || []
 
               apply_result = tc.apply_edits(checkout_path: checkout_path, edits: edits)

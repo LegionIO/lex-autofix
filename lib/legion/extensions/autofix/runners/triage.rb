@@ -15,7 +15,8 @@ module Legion
 
             result = Legion::LLM.structured(
               messages: [{ role: 'user', content: prompt }],
-              schema:   schema
+              schema:   schema,
+              caller:   { extension: 'lex-autofix', operation: 'triage' }
             )
 
             clusters = result[:clusters] || []
