@@ -3,8 +3,9 @@
 module Legion
   module Extensions
     module Autofix
-      module Actors
+      module Actor
         class LogConsumer < Legion::Extensions::Actors::Subscription
+          def runner_class = Legion::Extensions::Autofix::Runners::Pipeline
           def runner_function = 'handle_log_event'
           def check_subtask? = false
           def generate_task? = false

@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+- Fix actor discovery: rename `module Actors` to `module Actor` (singular) to match framework convention
+- Add explicit `runner_class` override to LogConsumer pointing to `Runners::Pipeline` where `handle_log_event` lives
+
 ## [0.1.4] - 2026-03-24
 
 ### Changed

@@ -14,7 +14,7 @@ end
 
 require 'legion/extensions/autofix/actors/log_consumer'
 
-RSpec.describe Legion::Extensions::Autofix::Actors::LogConsumer do
+RSpec.describe Legion::Extensions::Autofix::Actor::LogConsumer do
   subject(:actor) { described_class.allocate }
 
   describe '#runner_function' do
