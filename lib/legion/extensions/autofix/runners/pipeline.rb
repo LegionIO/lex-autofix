@@ -136,11 +136,17 @@ module Legion
           end
 
           def cache_get(key)
-            Legion::Cache.get(key) if defined?(Legion::Cache)
+            return unless defined?(Legion::Cache)
+
+            cache = Legion::Cache
+            cache.get(key)
           end
 
           def cache_set(key, value, ttl: 60)
-            Legion::Cache.set(key, value, ttl) if defined?(Legion::Cache)
+            return unless defined?(Legion::Cache)
+
+            cache = Legion::Cache
+            cache.set(key, value, ttl)
           end
         end
       end
