@@ -11,6 +11,11 @@
 - Update `Fix#extract_file_paths` to strip `gem_path` prefix from `caller_file` and backtrace paths using new `strip_gem_prefix` helper
 - All keys consumed from events are now flat (`caller_file`, `caller_line`, `gem_path`, `error_fingerprint`, `exception_class`) — no nested `:caller` or `:exception` sub-hashes
 
+## [0.1.6] - 2026-03-25
+
+### Added
+- Add repo governance files: CODEOWNERS, dependabot.yml, and reusable CI workflows
+
 ## [0.1.5] - 2026-03-24
 
 ### Fixed
