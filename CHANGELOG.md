@@ -6,6 +6,11 @@
 - Fix actor discovery: rename `module Actors` to `module Actor` (singular) to match framework convention
 - Add explicit `runner_class` override to LogConsumer pointing to `Runners::Pipeline` where `handle_log_event` lives
 
+## [0.1.6] - 2026-03-26
+
+### Changed
+- set remote_invocable? false for local dispatch
+
 ## [0.1.4] - 2026-03-24
 
 ### Changed
