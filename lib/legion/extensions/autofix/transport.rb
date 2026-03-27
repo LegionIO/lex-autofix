@@ -7,7 +7,9 @@ module Legion
         extend Legion::Extensions::Transport if defined?(Legion::Extensions::Transport)
 
         def self.additional_e_to_q
-          [{ from: 'legion.logging', to: 'autofix.ingest', routing_key: 'legion.#' }]
+          %w[warn error fatal].map do |level|
+            { from: 'legion.logging', to: 'autofix.ingest', routing_key: "legion.logging.exception.#{level}.#" }
+          end
         end
       end
     end

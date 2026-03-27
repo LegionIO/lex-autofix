@@ -29,6 +29,12 @@ module Legion
           end
 
           def handle_log_event(**event)
+            fingerprint = event[:error_fingerprint]
+            if fingerprint
+              return { success: true, action: :skip_wip } unless cache_get("autofix:wip:#{fingerprint}").nil?
+              return { success: true, action: :skip_fixed } unless cache_get("autofix:fixed:#{fingerprint}").nil?
+            end
+
             Pipeline.buffer.add(event)
             run_pipeline if Pipeline.buffer.flush_ready?
             { success: true }
@@ -40,7 +46,7 @@ module Legion
             return triage_result unless triage_result[:success]
 
             triage_result[:non_actionable].each do |cluster|
-              log_info("autofix: skipping non-actionable cluster: #{cluster[:summary]}")
+              log.info("autofix: skipping non-actionable cluster: #{cluster[:summary]}")
             end
 
             triage_result[:actionable].each do |cluster|
@@ -79,7 +85,7 @@ module Legion
             )
 
             unless fix_result[:success]
-              log_warn("autofix: fix failed for cluster #{cluster[:summary]}: #{fix_result[:reason]}")
+              log.warn("autofix: fix failed for cluster #{cluster[:summary]}: #{fix_result[:reason]}")
               return fix_result
             end
 
@@ -99,25 +105,29 @@ module Legion
 
           def resolve_token
             Legion::Settings.dig(:autofix, :github, :token)
-          rescue StandardError
+          rescue StandardError => e
+            log.warn("autofix: could not resolve token: #{e.message}")
             nil
           end
 
           def resolve_org
             Legion::Settings.dig(:autofix, :github, :org) || 'LegionIO'
-          rescue StandardError
+          rescue StandardError => e
+            log.warn("autofix: could not resolve org: #{e.message}")
             'LegionIO'
           end
 
           def resolve_max_retries
             Legion::Settings.dig(:autofix, :llm, :max_retries) || 3
-          rescue StandardError
+          rescue StandardError => e
+            log.warn("autofix: could not resolve max_retries: #{e.message}")
             3
           end
 
           def resolve_checkout_dir
             Legion::Settings.dig(:autofix, :checkout_dir)
-          rescue StandardError
+          rescue StandardError => e
+            log.warn("autofix: could not resolve checkout_dir: #{e.message}")
             nil
           end
 
@@ -125,12 +135,18 @@ module Legion
             text.to_s.downcase.gsub(/[^a-z0-9]+/, '-').slice(0, 40).chomp('-')
           end
 
-          def log_info(msg)
-            log.info(msg)
+          def cache_get(key)
+            return unless defined?(Legion::Cache)
+
+            cache = Legion::Cache
+            cache.get(key)
           end
 
-          def log_warn(msg)
-            log.warn(msg)
+          def cache_set(key, value, ttl: 60)
+            return unless defined?(Legion::Cache)
+
+            cache = Legion::Cache
+            cache.set(key, value, ttl)
           end
         end
       end

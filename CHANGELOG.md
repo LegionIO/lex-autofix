@@ -2,6 +2,29 @@
 
 ## [Unreleased]
 
+## [0.1.8] - 2026-03-27
+
+### Fixed
+- Add `=> e` capture and `log.warn` logging to all four bare `rescue StandardError` clauses in `Pipeline` (`resolve_token`, `resolve_org`, `resolve_max_retries`, `resolve_checkout_dir`)
+- Replace `log_info`/`log_warn` wrapper methods with direct `log.info`/`log.warn` calls at call sites and remove the now-unused wrappers
+- Replace direct `Legion::Cache.get` calls with `cache_get` helper (private method defined on `Pipeline` using the full qualified key, avoiding namespace double-prefixing)
+
+## [0.1.7] - 2026-03-27
+
+### Changed
+- Update `Transport.additional_e_to_q` to emit three targeted bindings (`legion.logging.exception.warn.#`, `legion.logging.exception.error.#`, `legion.logging.exception.fatal.#`) instead of the broad `legion.#` catch-all
+- Update `BatchBuffer#build_key` to use `error_fingerprint` as the group key when present, falling back to `lex:exception_class`
+- Update `Pipeline#handle_log_event` to check fingerprint cache (`autofix:wip:` and `autofix:fixed:` keys via `Legion::Cache`) and skip buffering for in-progress or already-fixed errors
+- Update `Fix#extract_file_paths` to strip `gem_path` prefix from `caller_file` and backtrace paths using new `strip_gem_prefix` helper
+- All keys consumed from events are now flat (`caller_file`, `caller_line`, `gem_path`, `error_fingerprint`, `exception_class`) — no nested `:caller` or `:exception` sub-hashes
+
+## [0.1.6] - 2026-03-25
+
+### Added
+- Add repo governance files: CODEOWNERS, dependabot.yml, and reusable CI workflows
+
+## [0.1.5] - 2026-03-24
+
 ### Fixed
 - Fix actor discovery: rename `module Actors` to `module Actor` (singular) to match framework convention
 - Add explicit `runner_class` override to LogConsumer pointing to `Runners::Pipeline` where `handle_log_event` lives
