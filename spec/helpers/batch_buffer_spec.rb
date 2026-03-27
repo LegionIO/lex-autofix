@@ -49,6 +49,17 @@ RSpec.describe Legion::Extensions::Autofix::Helpers::BatchBuffer do
       expect(buffer.groups.keys).to include('core:unknown')
     end
 
+    it 'uses error_fingerprint as the group key when present' do
+      buffer.add({ error_fingerprint: 'abc123', lex: 'mylex', exception_class: 'RuntimeError' })
+      buffer.add({ error_fingerprint: 'abc123', lex: 'mylex', exception_class: 'RuntimeError' })
+      expect(buffer.groups['abc123'].length).to eq(2)
+    end
+
+    it 'falls back to lex:exception_class when error_fingerprint is absent' do
+      buffer.add({ lex: 'mylex', exception_class: 'RuntimeError' })
+      expect(buffer.groups.keys).to include('mylex:RuntimeError')
+    end
+
     it 'increments total size' do
       buffer.add({ lex: 'a', exception_class: 'E' })
       buffer.add({ lex: 'b', exception_class: 'E' })

@@ -29,6 +29,12 @@ module Legion
           end
 
           def handle_log_event(**event)
+            fingerprint = event[:error_fingerprint]
+            if fingerprint && defined?(Legion::Cache)
+              return { success: true, action: :skip_wip } unless Legion::Cache.get("autofix:wip:#{fingerprint}").nil?
+              return { success: true, action: :skip_fixed } unless Legion::Cache.get("autofix:fixed:#{fingerprint}").nil?
+            end
+
             Pipeline.buffer.add(event)
             run_pipeline if Pipeline.buffer.flush_ready?
             { success: true }

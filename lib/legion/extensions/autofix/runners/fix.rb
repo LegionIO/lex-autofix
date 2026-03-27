@@ -75,17 +75,26 @@ module Legion
           private
 
           def extract_file_paths(error_details)
+            gem_base = error_details[:gem_path].to_s
             paths = []
-            paths << error_details[:caller_file] if error_details[:caller_file]
+            paths << strip_gem_prefix(error_details[:caller_file].to_s, gem_base)
 
             Array(error_details[:backtrace]).each do |line|
               file = line.to_s.split(':').first
-              paths << file if file && !file.empty?
+              next if file.nil? || file.empty?
+
+              paths << strip_gem_prefix(file, gem_base)
             end
 
-            paths = paths.uniq
+            paths = paths.uniq.reject(&:empty?)
             spec_paths = paths.map { |p| p.sub('lib/', 'spec/').sub(/\.rb$/, '_spec.rb') }
             (paths + spec_paths).uniq
+          end
+
+          def strip_gem_prefix(path, gem_base)
+            return path if gem_base.empty?
+
+            path.delete_prefix("#{gem_base}/")
           end
 
           def build_messages(attempt:, error_details:, files:, test_output:)

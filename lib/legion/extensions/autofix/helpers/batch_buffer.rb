@@ -56,6 +56,8 @@ module Legion
           private
 
           def build_key(event)
+            return event[:error_fingerprint] if event[:error_fingerprint]
+
             lex             = event[:lex] || 'core'
             exception_class = event[:exception_class] || 'unknown'
             "#{lex}:#{exception_class}"
