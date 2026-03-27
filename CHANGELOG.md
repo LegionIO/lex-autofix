@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [0.1.8] - 2026-03-27
+
+### Fixed
+- Add `=> e` capture and `log.warn` logging to all four bare `rescue StandardError` clauses in `Pipeline` (`resolve_token`, `resolve_org`, `resolve_max_retries`, `resolve_checkout_dir`)
+- Replace `log_info`/`log_warn` wrapper methods with direct `log.info`/`log.warn` calls at call sites and remove the now-unused wrappers
+- Replace direct `Legion::Cache.get` calls with `cache_get` helper (private method defined on `Pipeline` using the full qualified key, avoiding namespace double-prefixing)
+
 ## [0.1.7] - 2026-03-27
 
 ### Changed
