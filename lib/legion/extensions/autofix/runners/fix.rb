@@ -53,6 +53,7 @@ module Legion
             tc.cleanup(checkout_path)
             { success: false, reason: "fix failed after max retries (#{max_retries})" }
           rescue StandardError => e
+            log.log_exception(e, context: 'autofix: attempt_fix failed')
             { success: false, reason: e.message }
           end
 

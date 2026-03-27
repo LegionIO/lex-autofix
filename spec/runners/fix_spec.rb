@@ -161,8 +161,12 @@ RSpec.describe Legion::Extensions::Autofix::Runners::Fix do
     end
 
     context 'when a StandardError is raised' do
+      let(:logger) { double('logger', log_exception: nil) }
+
       before do
         allow(tc).to receive(:clone).and_raise(StandardError, 'unexpected explosion')
+        log_double = logger
+        host.define_singleton_method(:log) { log_double }
       end
 
       it 'returns success: false' do
