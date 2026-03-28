@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [0.1.9] - 2026-03-28
+
+### Changed
+- Set `remote_invocable? false` — autofix runs as a local-only actor, eliminating AMQP queue/consumer creation for its subscription
+
 ## [0.1.8] - 2026-03-27
 
 ### Fixed

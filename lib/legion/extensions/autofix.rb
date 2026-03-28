@@ -10,6 +10,10 @@ module Legion
       def self.llm_required?
         true
       end
+
+      def self.remote_invocable?
+        false
+      end
     end
   end
 end
