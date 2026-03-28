@@ -137,6 +137,64 @@ RSpec.describe Legion::Extensions::Autofix::Runners::Pipeline do
         expect(host).to have_received(:run_pipeline)
       end
     end
+
+    context 'when event has error_fingerprint and cache indicates wip' do
+      let(:fp_event) { { lex: 'lex-foo', exception_class: 'RuntimeError', error_fingerprint: 'fp123' } }
+
+      before do
+        stub_const('Legion::Cache', Module.new do
+          def self.get(key)
+            key == 'autofix:wip:fp123' ? 'pending' : nil
+          end
+        end)
+      end
+
+      it 'returns skip_wip without buffering' do
+        result = host.handle_log_event(**fp_event)
+        expect(result).to eq({ success: true, action: :skip_wip })
+        expect(buffer).not_to have_received(:add)
+      end
+    end
+
+    context 'when event has error_fingerprint and cache indicates fixed' do
+      let(:fp_event) { { lex: 'lex-foo', exception_class: 'RuntimeError', error_fingerprint: 'fp456' } }
+
+      before do
+        stub_const('Legion::Cache', Module.new do
+          def self.get(key)
+            key == 'autofix:fixed:fp456' ? 'done' : nil
+          end
+        end)
+      end
+
+      it 'returns skip_fixed without buffering' do
+        result = host.handle_log_event(**fp_event)
+        expect(result).to eq({ success: true, action: :skip_fixed })
+        expect(buffer).not_to have_received(:add)
+      end
+    end
+
+    context 'when event has error_fingerprint but cache returns nil for both keys' do
+      let(:fp_event) { { lex: 'lex-foo', exception_class: 'RuntimeError', error_fingerprint: 'fpnew' } }
+
+      before do
+        stub_const('Legion::Cache', Module.new do
+          def self.get(_key)
+            nil
+          end
+        end)
+      end
+
+      it 'adds the event to the buffer' do
+        host.handle_log_event(**fp_event)
+        expect(buffer).to have_received(:add).with(fp_event)
+      end
+
+      it 'returns success: true' do
+        result = host.handle_log_event(**fp_event)
+        expect(result[:success]).to be(true)
+      end
+    end
   end
 
   describe '#run_pipeline' do

@@ -7,12 +7,12 @@ module Legion
     module Autofix
       extend Legion::Extensions::Core if defined?(Legion::Extensions::Core)
 
-      def self.remote_invocable?
-        false
-      end
-
       def self.llm_required?
         true
+      end
+
+      def self.remote_invocable?
+        false
       end
     end
   end

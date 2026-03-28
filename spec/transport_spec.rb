@@ -38,26 +38,27 @@ require 'legion/extensions/autofix/transport/queues/ingest'
 
 RSpec.describe Legion::Extensions::Autofix::Transport do
   describe '.additional_e_to_q' do
-    subject(:bindings) { described_class.additional_e_to_q }
+    let(:bindings) { described_class.additional_e_to_q }
 
-    it 'returns an array' do
-      expect(bindings).to be_an(Array)
-    end
-
-    it 'contains exactly one binding' do
-      expect(bindings.size).to eq(1)
+    it 'returns 3 bindings for warn, error, fatal' do
+      expect(bindings.size).to eq(3)
     end
 
     it 'binds from legion.logging exchange' do
-      expect(bindings.first[:from]).to eq('legion.logging')
+      bindings.each { |b| expect(b[:from]).to eq('legion.logging') }
     end
 
     it 'binds to autofix.ingest queue' do
-      expect(bindings.first[:to]).to eq('autofix.ingest')
+      bindings.each { |b| expect(b[:to]).to eq('autofix.ingest') }
     end
 
-    it 'uses legion.# routing key' do
-      expect(bindings.first[:routing_key]).to eq('legion.#')
+    it 'uses exception routing key prefix' do
+      keys = bindings.map { |b| b[:routing_key] }
+      expect(keys).to contain_exactly(
+        'legion.logging.exception.warn.#',
+        'legion.logging.exception.error.#',
+        'legion.logging.exception.fatal.#'
+      )
     end
   end
 end

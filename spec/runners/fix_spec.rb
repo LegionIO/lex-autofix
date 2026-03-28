@@ -161,8 +161,12 @@ RSpec.describe Legion::Extensions::Autofix::Runners::Fix do
     end
 
     context 'when a StandardError is raised' do
+      let(:logger) { double('logger', log_exception: nil) }
+
       before do
         allow(tc).to receive(:clone).and_raise(StandardError, 'unexpected explosion')
+        log_double = logger
+        host.define_singleton_method(:log) { log_double }
       end
 
       it 'returns success: false' do
@@ -249,6 +253,66 @@ RSpec.describe Legion::Extensions::Autofix::Runners::Fix do
         {}
       end
       host.attempt_fix(repo_url: repo_url, branch: branch, error_details: error_details)
+    end
+
+    context 'when gem_path is provided' do
+      let(:error_details_with_gem_path) do
+        {
+          exception_class: 'RuntimeError',
+          message:         'boom',
+          gem_path:        '/var/lib/gems/lex-foo-1.0.0',
+          caller_file:     '/var/lib/gems/lex-foo-1.0.0/lib/lex/foo/runner.rb',
+          backtrace:       ['/var/lib/gems/lex-foo-1.0.0/lib/lex/foo/actor.rb:10:in `call`']
+        }
+      end
+
+      it 'strips the gem_path prefix from caller_file' do
+        allow(tc).to receive(:read_files) do |args|
+          paths = args[:file_paths]
+          expect(paths).to include('lib/lex/foo/runner.rb')
+          expect(paths).not_to include('/var/lib/gems/lex-foo-1.0.0/lib/lex/foo/runner.rb')
+          {}
+        end
+        host.attempt_fix(repo_url: repo_url, branch: branch, error_details: error_details_with_gem_path)
+      end
+
+      it 'strips the gem_path prefix from backtrace paths' do
+        allow(tc).to receive(:read_files) do |args|
+          paths = args[:file_paths]
+          expect(paths).to include('lib/lex/foo/actor.rb')
+          expect(paths).not_to include('/var/lib/gems/lex-foo-1.0.0/lib/lex/foo/actor.rb')
+          {}
+        end
+        host.attempt_fix(repo_url: repo_url, branch: branch, error_details: error_details_with_gem_path)
+      end
+    end
+
+    context 'when gem_path is absent' do
+      it 'returns paths unchanged' do
+        allow(tc).to receive(:read_files) do |args|
+          paths = args[:file_paths]
+          expect(paths).to include('lib/lex/foo/runner.rb')
+          {}
+        end
+        host.attempt_fix(repo_url: repo_url, branch: branch, error_details: error_details)
+      end
+    end
+  end
+
+  describe '#strip_gem_prefix' do
+    it 'removes the gem_base prefix from a path' do
+      result = host.send(:strip_gem_prefix, '/gems/lex-foo/lib/foo.rb', '/gems/lex-foo')
+      expect(result).to eq('lib/foo.rb')
+    end
+
+    it 'returns the path unchanged when gem_base is empty' do
+      result = host.send(:strip_gem_prefix, 'lib/foo.rb', '')
+      expect(result).to eq('lib/foo.rb')
+    end
+
+    it 'returns the path unchanged when gem_base does not match' do
+      result = host.send(:strip_gem_prefix, '/other/path/lib/foo.rb', '/gems/lex-foo')
+      expect(result).to eq('/other/path/lib/foo.rb')
     end
   end
 end
