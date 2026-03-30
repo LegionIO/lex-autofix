@@ -6,7 +6,7 @@ module Legion
   module Extensions
     module Autofix
       module Runners
-        module Ship
+        module Ship # rubocop:disable Legion/Extension/RunnerIncludeHelpers
           def commit_and_push(checkout_path:, branch:, message:)
             Dir.chdir(checkout_path) do
               return { success: false, reason: 'git add failed' } unless system('git', 'add', '-A')
@@ -17,7 +17,7 @@ module Legion
             { success: true }
           end
 
-          def open_pr(owner:, repo:, branch:, title:, body:, token:) # rubocop:disable Metrics/ParameterLists
+          def open_pr(owner:, repo:, branch:, title:, body:, token:)
             client = Legion::Extensions::Github::Client.new(token: token)
             result = client.create_pull_request(
               owner: owner,

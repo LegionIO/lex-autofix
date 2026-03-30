@@ -7,7 +7,7 @@ module Legion
   module Extensions
     module Autofix
       module Runners
-        module Fix
+        module Fix # rubocop:disable Legion/Extension/RunnerIncludeHelpers
           def attempt_fix(repo_url: nil, branch: nil, error_details: nil, issue_number: nil, # rubocop:disable Metrics/ParameterLists
                           org: nil, repo: nil, summary: nil, max_retries: 3, checkout_dir: nil, **)
             repo_url ||= "https://github.com/#{org}/#{repo}.git" if org && repo

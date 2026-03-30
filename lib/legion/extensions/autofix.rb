@@ -30,6 +30,6 @@ if defined?(Legion::Extensions::Core)
   require_relative 'autofix/runners/ship'
   require_relative 'autofix/runners/pipeline'
   require_relative 'autofix/client'
-  require_relative 'autofix/transport' if defined?(Legion::Extensions::Transport)
-  require_relative 'autofix/actors/log_consumer' if defined?(Legion::Extensions::Actors::Subscription)
+  require_relative 'autofix/transport'
+  require_relative 'autofix/actors/log_consumer'
 end

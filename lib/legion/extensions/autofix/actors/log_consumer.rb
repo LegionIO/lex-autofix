@@ -10,7 +10,7 @@ module Legion
           def check_subtask? = true
           def generate_task? = false
 
-          def enabled?
+          def enabled? # rubocop:disable Legion/Extension/ActorEnabledSideEffects
             !!(defined?(Legion::LLM) && Legion::LLM.respond_to?(:started?) && Legion::LLM.started?)
           end
         end
