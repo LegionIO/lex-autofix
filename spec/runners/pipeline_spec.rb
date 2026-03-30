@@ -56,7 +56,7 @@ RSpec.describe Legion::Extensions::Autofix::Runners::Pipeline do
 
       def create_comment(owner:, repo:, issue_number:, body:); end
 
-      def create_pull_request(owner:, repo:, title:, head:, base:, body:); end # rubocop:disable Metrics/ParameterLists
+      def create_pull_request(owner:, repo:, title:, head:, base:, body:); end
     end)
 
     described_class.instance_variable_set(:@buffer, buffer)

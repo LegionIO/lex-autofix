@@ -4,7 +4,7 @@ module Legion
   module Extensions
     module Autofix
       module Runners
-        module Diagnose
+        module Diagnose # rubocop:disable Legion/Extension/RunnerIncludeHelpers
           def check_github(cluster:, events:, token: nil, org: nil, **)
             token ||= resolve_token
             org ||= resolve_org

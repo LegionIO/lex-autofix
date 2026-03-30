@@ -6,7 +6,7 @@ module Legion
   module Extensions
     module Autofix
       module Runners
-        module Triage
+        module Triage # rubocop:disable Legion/Extension/RunnerIncludeHelpers
           def batch_triage(events:, **)
             return { success: false, reason: 'no events to triage' } if events.empty?
 

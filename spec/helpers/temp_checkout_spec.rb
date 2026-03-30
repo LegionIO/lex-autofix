@@ -177,7 +177,7 @@ RSpec.describe Legion::Extensions::Autofix::Helpers::TempCheckout do
 
     it 'caps at 10 files and ignores extras' do
       11.times { |i| File.write(File.join(checkout_path, "file#{i}.rb"), "content#{i}") }
-      paths = 11.times.map { |i| "file#{i}.rb" }
+      paths = Array.new(11) { |i| "file#{i}.rb" }
       result = checkout.read_files(checkout_path: checkout_path, file_paths: paths)
       expect(result.size).to eq(10)
     end

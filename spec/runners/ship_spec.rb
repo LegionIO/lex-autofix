@@ -27,7 +27,7 @@ RSpec.describe Legion::Extensions::Autofix::Runners::Ship do
     stub_const('Legion::Extensions::Github::Client', Class.new do
       def initialize(token:); end
 
-      def create_pull_request(owner:, repo:, title:, head:, base:, body:); end # rubocop:disable Metrics/ParameterLists
+      def create_pull_request(owner:, repo:, title:, head:, base:, body:); end
     end)
     allow(Legion::Extensions::Github::Client).to receive(:new).with(token: token).and_return(github_client)
     allow(Legion::Extensions::Autofix::Helpers::TempCheckout).to receive(:new).and_return(tc)

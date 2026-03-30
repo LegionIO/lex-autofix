@@ -1,14 +1,39 @@
-inherit_from:
-  - https://raw.githubusercontent.com/LegionIO/LegionIO/main/.rubocop.yml
+inherit_gem:
+  rubocop-legion: config/lex.yml
 
-AllCops:
-  TargetRubyVersion: 3.4
-  NewCops: enable
-
-Naming/PredicateMethod:
+# Actors use modern Ruby one-liner `def time = N` syntax which this cop does not recognize
+Legion/Extension/EveryActorRequiresTime:
   Enabled: false
 
-Metrics/BlockLength:
-  Exclude:
-    - 'spec/**/*'
-    - 'lex-autofix.gemspec'
+# RunnerReturnHash fires on private helper methods that intentionally return non-Hash values
+Legion/Extension/RunnerReturnHash:
+  Enabled: false
+
+# Files in this gem use direct Legion::* calls intentionally (no helper mixin in helpers/classes)
+Legion/HelperMigration/DirectLogging:
+  Enabled: false
+
+Legion/HelperMigration/OldLoggingMethods:
+  Enabled: false
+
+Legion/HelperMigration/DirectJson:
+  Enabled: false
+
+Legion/HelperMigration/DirectLlm:
+  Enabled: false
+
+Legion/HelperMigration/DirectCache:
+  Enabled: false
+
+Legion/HelperMigration/DirectData:
+  Enabled: false
+
+Legion/HelperMigration/DirectKnowledge:
+  Enabled: false
+
+# Mutable class instance variables are intentional (protected by mutex)
+ThreadSafety/MutableClassInstanceVariable:
+  Enabled: false
+
+ThreadSafety/ClassInstanceVariable:
+  Enabled: false
