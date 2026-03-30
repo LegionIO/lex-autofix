@@ -8,12 +8,20 @@ module Legion
     module Autofix
       module Runners
         module Fix
-          def attempt_fix(repo_url:, branch:, error_details:, max_retries: 3, checkout_dir: nil)
+          def attempt_fix(repo_url: nil, branch: nil, error_details: nil, issue_number: nil, # rubocop:disable Metrics/ParameterLists
+                          org: nil, repo: nil, summary: nil, max_retries: 3, checkout_dir: nil, **)
+            repo_url ||= "https://github.com/#{org}/#{repo}.git" if org && repo
+            branch ||= "autofix/#{issue_number}-#{slug(summary || 'fix')}" if issue_number
+            error_details ||= {}
+
             tc_opts = checkout_dir ? { base_dir: checkout_dir } : {}
             tc = Helpers::TempCheckout.new(**tc_opts)
 
             clone_result = tc.clone(repo_url: repo_url, branch: branch)
-            return clone_result unless clone_result[:success]
+            unless clone_result[:success]
+              return clone_result.merge(issue_number: issue_number, org: org, repo: repo,
+                                        branch: branch, summary: summary)
+            end
 
             checkout_path = clone_result[:path]
             file_paths = extract_file_paths(error_details)
@@ -40,7 +48,11 @@ module Legion
               test_result = run_tests(checkout_path: checkout_path)
               if test_result[:success]
                 lint_result = run_lint(checkout_path: checkout_path)
-                return { success: true, checkout_path: checkout_path } if lint_result[:success]
+                if lint_result[:success]
+                  return { success: true, checkout_path: checkout_path,
+                           issue_number: issue_number, org: org, repo: repo,
+                           branch: branch, summary: summary }
+                end
 
                 test_output = lint_result[:output]
               else
@@ -96,6 +108,10 @@ module Legion
             return path if gem_base.empty?
 
             path.delete_prefix("#{gem_base}/")
+          end
+
+          def slug(text)
+            text.to_s.downcase.gsub(/[^a-z0-9]+/, '-').gsub(/^-+|-+$/, '')[0, 40]
           end
 
           def build_messages(attempt:, error_details:, files:, test_output:)

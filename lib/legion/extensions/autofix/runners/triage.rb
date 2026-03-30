@@ -7,7 +7,7 @@ module Legion
     module Autofix
       module Runners
         module Triage
-          def batch_triage(events:)
+          def batch_triage(events:, **)
             return { success: false, reason: 'no events to triage' } if events.empty?
 
             prompt = Helpers::Prompts.triage(events)

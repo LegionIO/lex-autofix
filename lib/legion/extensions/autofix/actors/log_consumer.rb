@@ -7,7 +7,7 @@ module Legion
         class LogConsumer < Legion::Extensions::Actors::Subscription
           def runner_class = Legion::Extensions::Autofix::Runners::Pipeline
           def runner_function = 'handle_log_event'
-          def check_subtask? = false
+          def check_subtask? = true
           def generate_task? = false
 
           def enabled?

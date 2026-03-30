@@ -33,7 +33,10 @@ module Legion
             { success: false, reason: e.message }
           end
 
-          def ship(checkout_path:, owner:, repo:, branch:, issue_number:, summary:, token:, checkout_dir: nil) # rubocop:disable Metrics/ParameterLists
+          def ship(checkout_path:, branch:, issue_number:, summary:, owner: nil, repo: nil, # rubocop:disable Metrics/ParameterLists
+                   token: nil, org: nil, checkout_dir: nil, **)
+            owner ||= org
+            token ||= resolve_token
             commit_result = commit_and_push(
               checkout_path: checkout_path,
               branch:        branch,

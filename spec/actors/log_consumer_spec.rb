@@ -24,8 +24,8 @@ RSpec.describe Legion::Extensions::Autofix::Actor::LogConsumer do
   end
 
   describe '#check_subtask?' do
-    it 'returns false' do
-      expect(actor.check_subtask?).to be(false)
+    it 'returns true' do
+      expect(actor.check_subtask?).to be(true)
     end
   end
 

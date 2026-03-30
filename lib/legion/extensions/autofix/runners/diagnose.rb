@@ -5,7 +5,9 @@ module Legion
     module Autofix
       module Runners
         module Diagnose
-          def check_github(cluster:, events:, token:, org: 'LegionIO')
+          def check_github(cluster:, events:, token: nil, org: nil, **)
+            token ||= resolve_token
+            org ||= resolve_org
             repo = cluster[:suggested_repo]
             exception_class = events.first[:exception_class] || 'unknown'
             client = Legion::Extensions::Github::Client.new(token: token)
@@ -14,12 +16,14 @@ module Legion
             )
             items = search_result.dig(:result, :items) || []
 
-            if items.any?
-              update_existing_issue(client: client, issue: items.first, events: events, org: org, repo: repo)
-            else
-              ctx = build_issue_context(cluster: cluster, events: events, exception_class: exception_class)
-              open_new_issue(client: client, cluster: cluster, org: org, repo: repo, ctx: ctx)
-            end
+            result = if items.any?
+                       update_existing_issue(client: client, issue: items.first, events: events, org: org, repo: repo)
+                     else
+                       ctx = build_issue_context(cluster: cluster, events: events, exception_class: exception_class)
+                       open_new_issue(client: client, cluster: cluster, org: org, repo: repo, ctx: ctx)
+                     end
+
+            result.merge(org: org, repo: cluster[:suggested_repo], cluster: cluster, events: events)
           rescue StandardError => e
             { success: false, reason: e.message }
           end

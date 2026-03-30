@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-03-29
+
+### Changed
+- All 4 pipeline runners (`batch_triage`, `check_github`, `attempt_fix`, `ship`) accept `**` for task system compatibility
+- `check_github` and `attempt_fix` pass through upstream data in results for downstream consumers
+- `attempt_fix` constructs `repo_url` and `branch` from payload keys when not provided directly
+- `ship` accepts `org:` as alternative to `owner:`
+- `LogConsumer` actor enables `check_subtask?` for workflow chain dispatch
+
 ## [0.1.9] - 2026-03-28
 
 ### Changed
